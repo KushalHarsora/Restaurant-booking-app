@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 
 // add middleware
 app.use(cors({
-    origin: ["http://localhost:3000", "https://restaurant-book.vercel.app"]
+    origin: ["http://localhost:3000", "https://restny.vercel.app"]
 }))
 
 // create a get request
@@ -23,5 +23,3 @@ app.get('/', (request, response) => {
 app.listen(port, () => {
     console.log(`listening at port ${port}`);
 });
-
-module.exports =  app;
