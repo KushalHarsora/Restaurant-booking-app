@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Restaurant Booking System",
+  title: "Restny",
   description: "Book your restaurant seats here.",
 };
 
