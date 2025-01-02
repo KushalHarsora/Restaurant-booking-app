@@ -12,7 +12,7 @@ const Navbar = () => {
 
     return (
         <section
-            className=' font-mono h-[7vh] w-screen fixed top-0 left-0 flex flex-row justify-between items-center px-[5vw] max-md:px-[10vw] border-b-[1.5px] border-gray-400 overflow-hidden z-20 backdrop-blur-sm shadow'
+            className=' font-mono h-[7vh] w-screen fixed top-0 left-0 flex flex-row justify-between items-center px-[5vw] max-md:px-[10vw] overflow-hidden z-20 backdrop-blur-sm shadow-lg shadow-orange-200'
             style={{ background: 'rgba(255, 255, 255, 0.75)' }}
         >
             <span
@@ -23,8 +23,7 @@ const Navbar = () => {
             </span>
             <span className=' max-md:hidden'>
                 <Button className=' text-base' variant={'link'} onClick={() => router.push("/")}>Home</Button>
-                <Button className=' text-base' variant={'link'} onClick={() => router.push("/about")}>About</Button>
-                <Button className=' text-base' variant={'link'} onClick={() => router.push("/contact")}>Contact</Button>
+                <Button className=' text-base' variant={'link'} onClick={() => router.push("/check")}>Check Booking</Button>
             </span>
             <span className=' max-md:hidden'>
                 <Button className=' text-base bg-orange-500 hover:bg-orange-600' variant={'default'} onClick={() => router.push("/book")}>Book Table</Button>
@@ -40,8 +39,7 @@ const Navbar = () => {
                         <div className=" w-full h-full flex flex-col justify-start items-center overflow-hidden gap-6">
                             <span className=' w-fit flex flex-col justify-between items-center'>
                                 <Button className=' text-base' variant={'link'} onClick={() => router.push("/")}>Home</Button>
-                                <Button className=' text-base' variant={'link'} onClick={() => router.push("/about")}>About</Button>
-                                <Button className=' text-base' variant={'link'} onClick={() => router.push("/contact")}>Contact</Button>
+                                <Button className=' text-base' variant={'link'} onClick={() => router.push("/check")}>Check Booking</Button>
                             </span>
                             <span>
                                 <Button className=' text-base bg-orange-500 hover:bg-orange-600' variant={'default'} onClick={() => router.push("/book")}>Book Table</Button>

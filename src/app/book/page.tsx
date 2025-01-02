@@ -8,10 +8,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, CircleArrowLeftIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -35,6 +38,9 @@ const formSchema = z.object({
 });
 
 const Page = () => {
+
+    const router = useRouter();
+
     const [availableSlots, setAvailableSlots] = useState<number[]>([]);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -70,11 +76,10 @@ const Page = () => {
 
     // Submit form data and book a slot
     const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
         const { visitDate, slots, name, email, phone, time } = values;
         try {
             const formattedDate = format(visitDate, "yyyy-MM-dd");
-    
+
             // Structure the payload as per the backend's expectations
             const bookingPayload = {
                 date: formattedDate,
@@ -84,7 +89,7 @@ const Page = () => {
                 email,
                 time,
             };
-    
+
             const response = await fetch(`${process.env.NEXT_PUBLIC_domain!}/api/bookings`, {
                 method: "POST",
                 headers: {
@@ -92,20 +97,27 @@ const Page = () => {
                 },
                 body: JSON.stringify(bookingPayload),
             });
-    
+
             if (response.ok) {
-                alert("Booking confirmed!");
+                if (!localStorage.getItem("name")) {
+                    localStorage.setItem("name", name);
+                }
+                if (localStorage.getItem("name")) {
+                    localStorage.removeItem("name");
+                    localStorage.setItem("name", name);
+                }
+                toast.success("Booking confirmed!");
                 form.reset();
-                fetchAvailableSlots(visitDate); // Re-fetch slots after successful booking
+                fetchAvailableSlots(visitDate);
             } else {
                 const errorData = await response.json();
-                alert(`Booking failed: ${errorData.message}`);
+                toast.error(`Booking failed: ${errorData.message}`);
             }
         } catch (error) {
             console.error("Error during booking:", error);
             alert("An error occurred. Please try again.");
         }
-    };    
+    };
 
     useEffect(() => {
         const subscription = form.watch((values) => {
@@ -122,11 +134,14 @@ const Page = () => {
     return (
         <React.Fragment>
             <main className="h-screen w-screen flex flex-row justify-center items-center overflow-hidden">
-                <section className="h-screen w-1/2 flex flex-col justify-center items-center">
-                    <div className="w-3/4 h-fit bg-white border-[1.5px] border-orange-400 p-12 rounded-lg shadow-2xl">
+                <section className="h-screen w-[calc(100vw-500px)] max-md:w-screen flex flex-col justify-center items-center bg-orange-50">
+                    <span onClick={() => { router.back() }} className=" absolute left-[2vw] top-[2vh] cursor-pointer">
+                        <CircleArrowLeftIcon size={35} />
+                    </span>
+                    <div className=" max-md:mt-[7vh] w-3/5 max-md:w-[90%] h-fit bg-white shadow-orange-200 p-12 rounded-2xl shadow-2xl max-md:backdrop-blur">
                         <h1 className="text-3xl font-mono font-semibold text-center">Book a Table</h1>
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
+                            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
                                 <FormField
                                     control={form.control}
                                     name="name"
@@ -215,14 +230,24 @@ const Page = () => {
                                                     className="w-full border border-slate-400 p-2 rounded-md"
                                                     onChange={(e) => field.onChange(Number(e.target.value))}  // Convert value to number
                                                 >
-                                                    <option value="" disabled>
-                                                        Select a slot
-                                                    </option>
-                                                    {availableSlots.map((slot) => (
-                                                        <option key={slot} value={slot}>
-                                                            {slot}
-                                                        </option>
-                                                    ))}
+                                                    {
+                                                        availableSlots.length ? (
+                                                            <>
+                                                                <option value="">
+                                                                    Select a slot
+                                                                </option>
+                                                                {availableSlots.map((slot) => (
+                                                                    <option key={slot} value={slot}>
+                                                                        {slot}
+                                                                    </option>
+                                                                ))}
+                                                            </>
+                                                        ) : (
+                                                            <option value="" disabled>
+                                                                No Slot Available
+                                                            </option>
+                                                        )
+                                                    }
                                                 </select>
                                             </FormControl>
                                             <FormMessage />
@@ -242,12 +267,21 @@ const Page = () => {
                                         </FormItem>
                                     )}
                                 />
-                                <Button type="submit">Submit</Button>
+                                <Button className=" bg-orange-500 hover:bg-orange-600 w-full shadow" type="submit">Submit</Button>
                             </form>
                         </Form>
                     </div>
                 </section>
-                <section className="h-screen w-1/2 bg-gray-200"></section>
+                <section className=" h-screen w-[500px] max-md:hidden">
+                    <Image
+                        src="/book.jpg"
+                        alt="Book Image"
+                        width={600}
+                        height={800}
+                        className=" w-[500px] h-screen max-md:hidden"
+                        loading="lazy"
+                    />
+                </section>
             </main>
         </React.Fragment>
     );
