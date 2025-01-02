@@ -2,6 +2,20 @@ const express = require('express');
 const router = express.Router();
 const { Booking, Slot } = require("../model/userModel");
 
+router.get("/:name", async (req, res) => {
+  const name = req.params.name;
+
+  try {
+    const bookings = await Booking.find({ name });
+    if (bookings.length === 0) {
+      return res.status(404).json({ message: "No bookings found for this user." });
+    }
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching bookings.", error });
+  }
+})
+
 router.post("/", async (req, res) => {
   // Use the correct field names from frontend
   const { name, email, phone, date, guests, time } = req.body;
