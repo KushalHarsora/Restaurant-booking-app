@@ -8,13 +8,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, CircleArrowLeftIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Navbar from "@/components/custom/Navbar";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -38,8 +38,6 @@ const formSchema = z.object({
 });
 
 const Page = () => {
-
-    const router = useRouter();
 
     const [availableSlots, setAvailableSlots] = useState<number[]>([]);
     const form = useForm<z.infer<typeof formSchema>>({
@@ -133,15 +131,13 @@ const Page = () => {
 
     return (
         <React.Fragment>
-            <main className="h-screen w-screen flex flex-row justify-center items-center overflow-hidden">
-                <section className="h-screen w-[calc(100vw-500px)] max-md:w-screen flex flex-col justify-center items-center bg-orange-50">
-                    <span onClick={() => { router.back() }} className=" absolute left-[2vw] top-[2vh] cursor-pointer">
-                        <CircleArrowLeftIcon size={35} />
-                    </span>
-                    <div className=" max-md:mt-[7vh] w-3/5 max-md:w-[90%] h-fit bg-white shadow-orange-200 p-12 rounded-2xl shadow-2xl max-md:backdrop-blur">
+            <Navbar />
+            <main className=" absolute top-[7vh] left-0 h-[93vh] w-screen flex flex-row justify-center items-center overflow-hidden">
+                <section className="h-[93vh] w-[calc(100vw-500px)] max-md:w-screen flex flex-col justify-center items-center bg-orange-50">
+                    <div className=" w-3/5 max-md:w-[90%] h-fit bg-white shadow-orange-200 p-12 max-md:py-6 rounded-2xl shadow-2xl max-md:backdrop-blur">
                         <h1 className="text-3xl font-mono font-semibold text-center">Book a Table</h1>
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 max-md:space-y-3">
                                 <FormField
                                     control={form.control}
                                     name="name"
