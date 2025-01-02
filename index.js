@@ -1,6 +1,7 @@
 require('dotenv').config(); // This will load the .env variables
 
 const express = require('express');
+const path = require('path');
 const cors = require("cors");
 const mongoose = require('mongoose');
 const bookingRoutes = require('./routes/booking');
@@ -25,5 +26,10 @@ mongoose.connect(process.env.MONGO_URL, {
 
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/slots', slotRouting);
+
+app.get("/", (req, res) => {
+  const htmlFile = path.join(__dirname, 'index.html');
+  res.sendFile(htmlFile);
+})
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Routes Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0 5vw;
+            background-color: #f9f9f9;
+        }
+
+        h1,
+        h2 {
+            color: #333;
+        }
+
+        .route {
+            background-color: #e0e0e0;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        code {
+            background-color: #cfccff;
+            color: #000000;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .example {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-left: 4px solid #5c6bc0;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="background-color: rgb(255, 170, 12); text-align: center; color: #333;">API Routes Documentation</h1>
+
+    <h2>/api/bookings</h2>
+    <p>This route handles both retrieving and creating bookings.</p>
+
+    <div class="route">
+        <h3>GET /api/bookings/:name</h3>
+        <p><strong>Function:</strong> This GET request retrieves all bookings related to a particular name. It searches
+            the database for entries matching the provided name and returns the results to the frontend.</p>
+        <div class="example">
+            <p><strong>Example Request:</strong></p>
+            <pre><code>GET /api/bookings/Kushal</code></pre>
+            <p><strong>Example Response:</strong></p>
+            <pre><code>{
+  "bookings": [
+    {
+      "_id": "12345",
+      "name": "Kushal",
+      "email": "kushal@example.com",
+      "phone": "1234567890",
+      "date": "2025-01-02",
+      "time": "14:00",
+      "guests": 3
+    },
+    ...
+  ]
+}</code></pre>
+        </div>
+    </div>
+
+    <div class="route">
+        <h3>POST /api/bookings</h3>
+        <p><strong>Function:</strong> This POST request creates a new booking and adds it to the database. It expects
+            the booking details to be sent in the request body. Once the booking is created, the server updates the
+            database accordingly.</p>
+        <div class="example">
+            <p><strong>Example Request:</strong></p>
+            <pre><code>POST /api/bookings</code></pre>
+            <p><strong>Example Body (JSON):</strong></p>
+            <pre><code>{
+  "name": "Kushal",
+  "email": "kushal@example.com",
+  "phone": "1234567890",
+  "date": "2025-01-02",
+  "time": "14:00",
+  "guests": 3
+}</code></pre>
+            <p><strong>Example Response:</strong></p>
+            <pre><code>{
+  "message": "Booking successfully created!"
+}</code></pre>
+        </div>
+    </div>
+
+    <h2>/api/slots</h2>
+    <p>This route helps check for available time slots on a particular date.</p>
+
+    <div class="route">
+        <h3>GET /api/slots/:date</h3>
+        <p><strong>Function:</strong> This GET request checks for available slots on a particular date. The server
+            searches for available times on that date and responds with the available slots, if any.</p>
+        <div class="example">
+            <p><strong>Example Request:</strong></p>
+            <pre><code>GET /api/slots/2025-01-02</code></pre>
+            <p><strong>Example Response:</strong></p>
+            <pre><code>{
+  "availableSlots": [
+    "09:00 AM",
+    "11:00 AM",
+    "01:00 PM",
+    "03:00 PM"
+  ]
+}</code></pre>
+            <p><strong>Example (No slots available):</strong></p>
+            <pre><code>{
+  "availableSlots": []
+}</code></pre>
+        </div>
+    </div>
+
+</body>
+
+</html>
