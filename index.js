@@ -1,25 +1,29 @@
-// import express
-const express = require("express");
+require('dotenv').config(); // This will load the .env variables
+
+const express = require('express');
 const cors = require("cors");
+const mongoose = require('mongoose');
+const bookingRoutes = require('./routes/booking');
+const slotRouting = require('./routes/slots');
 
-// create the app
 const app = express();
+app.use(express.json());
+app.use(cors());
 
-// define port number
 const port = process.env.PORT || 5000;
 
-// add middleware
-app.use(cors({
-    origin: ["http://localhost:3000", "https://restny.vercel.app"]
-}))
-
-// create a get request
-app.get('/', (request, response) => {
-    const message = {message: "Hello from server"};
-    response.json(message);
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log("MongoDB connected successfully");
+})
+.catch((err) => {
+  console.error("MongoDB connection error: ", err);
 });
 
-// server listening
-app.listen(port, () => {
-    console.log(`listening at port ${port}`);
-});
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/slots', slotRouting);
+
+app.listen(port, () => console.log(`Server running on port ${port}`));
